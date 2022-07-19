@@ -48,3 +48,55 @@ function clearInputs(){
 function saveCardsToLocalStorage(){
     localStorage.setItem("cards",JSON.stringify(cards));
 };
+
+function editCards(){
+    let ol = document.getElementById("editCardList");
+    ol.innerHTML = "";
+    cards.forEach((card,index)=>{
+        ol.innerHTML+=`
+        <li>
+            <input value="${card.question}" type="text" id="question${index}" placeholder="Question">
+            <input value="${card.answer}" type="text" id="answer${index}" placeholder="Answer">
+            <button onclick="updateCard(${index})">Update</button>
+            <button onclick="deleteCard(${index})">Delete</button>
+        </li>
+        `
+    });
+
+    ol.innerHTML+= `        
+        <button onclick="updateAllCards();">Update all</button>
+    `
+};
+
+function updateCard(index){
+
+    console.log(cards);
+    let question = document.getElementById(`question${index}`).value;
+    let answer = document.getElementById(`answer${index}`).value;
+
+    cards.splice(index,1,{question,answer});
+    console.log(cards);
+    
+    editCards();
+    saveCardsToLocalStorage();
+};
+
+function updateAllCards(){
+   cards = cards.map((card,index)=>{
+       let question =  document.getElementById(`question${index}`).value;
+       let answer = document.getElementById(`answer${index}`).value;
+
+        return {question,answer}
+    });
+    
+    console.log(cards);
+    saveCardsToLocalStorage();
+};
+
+function deleteCard(index){
+    console.log(cards);
+    cards.splice(index,1);
+    console.log(cards);
+    editCards();
+    saveCardsToLocalStorage();
+};
