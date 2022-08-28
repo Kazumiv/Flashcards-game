@@ -9,6 +9,31 @@ function getSavedCards(){
     };
 };
 
+function readAnkiCard(){
+    let fileInput = document.getElementById("ankiInput");
+
+    let fr = new FileReader();
+    fr.readAsText(fileInput.files[0]);
+    fr.onload = () => {
+
+        let breakLines = fr.result.split(/\r?\n|\r|\n/g);
+        
+        breakLines.forEach((element,index) => {
+            if(!element){
+                return
+            }
+            let finalString = element.replaceAll(`\"`,"").replaceAll(/\[anki:play....\]/gi,"").replaceAll("[anki:play:a:0]","")
+            let card = finalString.split(`\t`);
+            
+            card = {question: card[0], answer: card[1]};
+            cards.push(card);
+        });
+
+        saveCardsToLocalStorage();
+    };
+    
+};
+
 function createCard(){
     let question = document.getElementById("questionInput").value;
     let answer = document.getElementById("answerInput").value;
